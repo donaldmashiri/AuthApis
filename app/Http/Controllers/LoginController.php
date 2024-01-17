@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-// use Validator;
+use Illuminate\Support\Facades\Auth;
 
-class LoginRegisterController extends Controller
+class LoginController extends Controller
 {
+
     public function register(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -83,13 +83,25 @@ class LoginRegisterController extends Controller
         return response()->json($response, 200);
     }
 
-    // public function logout(Request $request)
-    // {
-    //     auth()->user()->tokens()->delete();
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'User is logged out successfully'
-    //         ], 200);
-    // }
+    public function logout(Request $request)
+    {
+        $user = $request->user();
 
+        if (!$user) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'User not found.',
+            ], 404);
+        }
+
+        $user->tokens()->delete();
+
+        $response = [
+            'status' => 'success',
+            'message' => 'User has been logged out successfully.',
+        ];
+
+        return response()->json($response, 200);
+    }
 }
