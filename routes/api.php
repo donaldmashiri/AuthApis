@@ -17,14 +17,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::post('/login', [LoginController::class, 'login']);
+Route::get('/products/search/{name}', [ProductController::class, 'search']);
 
 Route::post('/register', [LoginController::class, 'register']);
 
-
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::resource('products', ProductController::class);
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
+
+
 });
 
